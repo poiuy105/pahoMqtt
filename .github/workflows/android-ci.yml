@@ -32,17 +32,18 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assembleDebug --stacktrace
 
-    - name: Upload APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: debug-apk
-        path: |
-          org.eclipse.paho.android.service/build/outputs/apk/org.eclipse.paho.android.service-debug.apk
-          org.eclipse.paho.android.sample/build/outputs/apk/org.eclipse.paho.android.sample-debug.apk
-          paho.mqtt.android.example/build/outputs/apk/paho.mqtt.android.example-debug.apk
-        retention-days: 5
-
     - name: List generated APKs
       run: |
         echo "Generated APK files:"
-        find . -name "*.apk" -type f 2>/dev/null
+        find . -name "*.apk" -type f 2>/dev/null || true
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      if: success()
+      with:
+        name: debug-apk
+        path: |
+          org.eclipse.paho.android.service/build/outputs/apk/debug/org.eclipse.paho.android.service-debug.apk
+          org.eclipse.paho.android.sample/build/outputs/apk/debug/org.eclipse.paho.android.sample-debug.apk
+          paho.mqtt.android.example/build/outputs/apk/debug/paho.mqtt.android.example-debug.apk
+        retention-days: 5
